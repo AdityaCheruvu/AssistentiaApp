@@ -15,7 +15,7 @@ from classroom.models import MyModel
 from classroom.models import DetailsForm
 from classroom.forms import PostForm
 from django.http import HttpResponseRedirect
-from classroom.Python import MarkAttendanceCode
+from classroom import MarkAttendanceCode
 
 from classroom.forms import PostForm
 import subprocess
@@ -48,6 +48,7 @@ class test_code:
         var1 = classId
         print(UsrName)
         print(classId)
+        MarkAttendanceCode.takeAttendance(classId, UsrName)
 
     def code1(self, studentID):
         global sid1
