@@ -62,6 +62,17 @@ def recognizePeople(data, imgPath):
     #return names, len(boxes), len(names.keys())
     return names
 
+def subjectCodeOfClass(classToMarkAttendance, prof, cursor):
+    subCode = cursor.execute("select SubjectId from classroom_proftosub_mapping where Professor=?", (prof,))
+    subCode = subCode.fetchall()
+    if(len(subCode) == 0):
+        raise Exception("The professor doesnt teach this class!")
+
+def updateInDB(classToMarkAttendance, prof, subCode, cursor):
+    pass
+    #subCode = cursor.execute("select ")
+    #for roll in finalResult:
+
 def takeAttendance(classToMarkAttendance, prof):
     try:
         rmtree(tmpDirLocal)
@@ -78,7 +89,7 @@ def takeAttendance(classToMarkAttendance, prof):
     process.wait()
     print(process.returncode)
 
-    classToMarkAttendance = "4CSE4/"
+    classToMarkAttendance = classToMarkAttendance+"/"
     print("[INFO] loading encodings...")
     data = pickle.loads(open(classDir+classToMarkAttendance+pickleName, "rb").read())
     finalResult = set()
@@ -87,18 +98,11 @@ def takeAttendance(classToMarkAttendance, prof):
         result = recognizePeople(data, tmpDirLocal+i)
         finalResult.update(set(result))
         #print(result)
-    """conn = sqlite3.connect(sqlite3Path)
+    # call update in db
+    conn = sqlite3.connect(sqlite3Path)
     cursor = conn.cursor()
-    subCode = conn.execute("select ")
-
-    for roll in finalResult:"""
+    #subId = subjectCodeOfClass(classToMarkAttendance, prof, cursor)
     print("The following are present")
     print(finalResult)
-    print(prof)
+    #print(prof, subId)
 
-
-
-
-class test_code:
-    def code(self):
-        takeAttendance()
