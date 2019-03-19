@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% block head %}
+Absentees List
+{% endblock %}
+{% block content %}
+<div style="margin-top:-110px;">
+<form method='POST' action=''>{% csrf_token %}
+<table style="margin-left:210px;">
+<tr style="color:red;font-size:30px;"">
+<td style="display: inline-block;">Name</td>
+<td>Absent</td>
+</tr>
+{% for i in data %}
+<tr>
+<td style="font-size:15px; text-align:centre;">{{ i }}</td>
+<td><input style="zoom:1.5;"type="checkbox" name="check_1" value={{ i }} ></td><br>
+<tr>
+{% endfor %}
+</table>
+<br><input type="submit"  value="Submit">
+</div>
+{% endblock %}

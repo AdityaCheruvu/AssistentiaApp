@@ -28,6 +28,13 @@ def Intital_page(request):
     return render(request, 'classroom/select.html')
 
 
+#@classroom.route("./classroom/templates/absentees.html", methods=['POST'])
+def Absentees(request):
+            ab=['aditya','pavan','satya','bharath','avinsah']
+            some_var = request.POST.getlist('check_1')
+            print(some_var)
+            return render(request, 'classroom/absentees.html',{'data':ab})
+
 
 class SignUpView(TemplateView):
     template_name = 'registration/signup.html'
@@ -60,7 +67,7 @@ class test_code:
         cid1=classID
         print(cid1)
 
-        
+
 def OneStudent(request):
         return render(request, 'classroom/OneStudent.html')
 
