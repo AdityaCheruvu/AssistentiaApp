@@ -134,9 +134,3 @@ class ProfToSub_Mapping(models.Model):
     ClassId = models.TextField('Class ID')
     Professor = models.TextField('Professor')
     SubjectId = models.IntegerField('Subject Id')
-
-
-class profToSub(models.Model):
-    roll = models.TextField('Roll No')
-    prof = models.TextField('Professor')
-    subId = models.IntegerField('Subject Id')
