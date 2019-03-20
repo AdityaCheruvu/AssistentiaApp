@@ -66,71 +66,36 @@ class ClassToStudent_Mapping(models.Model):
         return self.RollNo
 
 class ClassToSub_Mapping(models.Model):
-    ClassId = models.TextField('Class ID')
-    Subject1 = models.TextField('Subject-1')
-    Subject2 = models.TextField('Subject-2')
-    Subject3 = models.TextField('Subject-3')
-    Subject4 = models.TextField('Subject-4')
-    Subject5 = models.TextField('Subject-5')
-    Subject6 = models.TextField('Subject-6')
-    Subject7 = models.TextField('Subject-7')
-    Subject8 = models.TextField('Subject-8')
-    Subject9 = models.TextField('Subject-9')
-    Subject10 = models.TextField('Subject-10')
-    Subject11 = models.TextField('Subject-11')
-    Subject12 = models.TextField('Subject-12')
-
+    ClassId = models.TextField('ClassID')
+    SubId = models.IntegerField('SubId')
+    SubName = models.TextField('SubName')
 
 class CumulativeAttendance(models.Model):
     RollNo = models.TextField('Roll Number')
-    Subject1 = models.IntegerField('Subject-1')
-    Subject2 = models.IntegerField('Subject-2')
-    Subject3 = models.IntegerField('Subject-3')
-    Subject4 = models.IntegerField('Subject-4')
-    Subject5 = models.IntegerField('Subject-5')
-    Subject6 = models.IntegerField('Subject-6')
-    Subject7 = models.IntegerField('Subject-7')
-    Subject8 = models.IntegerField('Subject-8')
-    Subject9 = models.IntegerField('Subject-9')
-    Subject10 = models.IntegerField('Subject-10')
-    Subject11 = models.IntegerField('Subject-11')
-    Subject12 = models.IntegerField('Subject-12')
+    SubId = models.IntegerField('SubId')
+    Attended = models.IntegerField('Attended')
+
+class CumulativeAttendanceTotal(models.Model):
+    ClassId = models.TextField('ClassID')
+    SubId = models.IntegerField('SubId')
+    Total = models.IntegerField('Attended')
 
 
 class DailyAttendance(models.Model):
     RollNo = models.TextField('Roll Number')
     Date_c = models.DateField('Date')
-    Subject1 = models.IntegerField('Subject-1')
-    Subject2 = models.IntegerField('Subject-2')
-    Subject3 = models.IntegerField('Subject-3')
-    Subject4 = models.IntegerField('Subject-4')
-    Subject5 = models.IntegerField('Subject-5')
-    Subject6 = models.IntegerField('Subject-6')
-    Subject7 = models.IntegerField('Subject-7')
-    Subject8 = models.IntegerField('Subject-8')
-    Subject9 = models.IntegerField('Subject-9')
-    Subject10 = models.IntegerField('Subject-10')
-    Subject11 = models.IntegerField('Subject-11')
-    Subject12 = models.IntegerField('Subject-12')
+    SubId = models.IntegerField('SubId')
+    Attended = models.IntegerField('Attended')
 
 
-class DidClassHappenOnDate(models.Model):
-    ClassId = models.TextField('Class ID')
+class DailyAttendanceTotal(models.Model):
+    ClassId = models.TextField('ClassID')
     Date_c = models.DateField('Date')
-    Subject1 = models.IntegerField('Subject-1')
-    Subject2 = models.IntegerField('Subject-2')
-    Subject3 = models.IntegerField('Subject-3')
-    Subject4 = models.IntegerField('Subject-4')
-    Subject5 = models.IntegerField('Subject-5')
-    Subject6 = models.IntegerField('Subject-6')
-    Subject7 = models.IntegerField('Subject-7')
-    Subject8 = models.IntegerField('Subject-8')
-    Subject9 = models.IntegerField('Subject-9')
-    Subject10 = models.IntegerField('Subject-10')
-    Subject11 = models.IntegerField('Subject-11')
-    Subject12 = models.IntegerField('Subject-12')
+    SubId = models.IntegerField('SubId')
+    Total = models.IntegerField('Attended')
 
-class ProfToSub_Mapping(models.Model):
+class ProfToSubMapping(models.Model):
     ClassId = models.TextField('Class ID')
-    Professor = models.TextField('Professor')
-    SubjectId = models.IntegerField('Subject Id')
+    RollNo = RollNo = models.TextField('Roll Number')
+    Prof = models.TextField('Professor')
+    SubId = models.IntegerField('SubId')
