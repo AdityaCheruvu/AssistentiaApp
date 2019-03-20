@@ -23,14 +23,14 @@ raspiPass = "aditya123*"
 raspiUser = "pi"
 tmpDirRpi="/home/pi/Assistentia/RaspberryPiCode/tmp/"
 codeDirRpi="/home/pi/Assistentia/RaspberryPiCode/"
-tmpDirLocal="/home/aditya/AssistentiaMajor/AssistentiaApp/Asistencia/django_school/classroom/tmp/"
+tmpDirLocal= os.path.join(os.path.dirname(os.path.abspath(__file__)), "tmp/")
 serverPass = "aditya123*"
 serverUser = "aditya"
-classDir = "/home/aditya/AssistentiaMajor/AssistentiaApp/Asistencia/django_school/classroom/classes/"
+classDir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "classes/")
 pickleName = "training.pickle"
 
 #sqlitePath
-sqlite3Path = '/home/aditya/AssistentiaMajor/AssistentiaApp/Asistencia/django_school/db.sqlite3'
+sqlite3Path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'db.sqlite3')
 """-----------------------------------------"""
 
 def cropFaceData(pictureDat, locationOfFace):
@@ -108,8 +108,9 @@ def takeAttendance(classToMarkAttendance, prof):
 
     """--------------------------------------------------------"""
     #code to return absentees list
-    allStudents = set("15071A05I9", "15071A05N1", "15071A05L9", "15071A05L1", "15071A05I2", "15071A05I1", "15071A05J3")
+    allStudents = {"15071A05I9", "15071A05N1", "15071A05L9", "15071A05L1", "15071A05I2", "15071A05I1", "15071A05J3"}
     absentees = allStudents - finalResult
+    print(absentees)
     return absentees
 
     """--------------------------------------------------------"""
