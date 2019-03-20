@@ -35,6 +35,12 @@ def Absentees(request):
             print(some_var)
             return render(request, 'classroom/absentees.html',{'data':ab})
 
+def collect_data(request):
+        if request.method=='POST':
+                data=request.POST.getlist('check_1')
+                print(data)
+        return render(request,'classroom/collect.html')
+
 
 class SignUpView(TemplateView):
     template_name = 'registration/signup.html'
