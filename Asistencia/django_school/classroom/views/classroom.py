@@ -66,7 +66,7 @@ class test_code:
         var1 = classId
         print(UsrName)
         print(classId)
-        return MarkAttendanceCode.takeAttendance(classId, UsrName)
+        return MarkAttendanceCode.takeAttendance(classId, UsrName) + [classId, UsrName]
 
 
     def code1(self, studentID):

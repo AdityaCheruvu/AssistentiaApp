@@ -111,6 +111,6 @@ def takeAttendance(classToMarkAttendance, prof):
     allStudents = {"15071A05I9", "15071A05N1", "15071A05L9", "15071A05L1", "15071A05I2", "15071A05I1", "15071A05J3"}
     absentees = allStudents - finalResult
     print("abseentees are",absentees)
-    return (absentees, list(finalResult))
+    return [absentees, list(finalResult)]
 
 """--------------------------------------------------------"""
