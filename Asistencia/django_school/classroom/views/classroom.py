@@ -39,9 +39,12 @@ def collect_data(request):
         if request.method=='POST':
                 plist=request.POST.getlist('present')
                 data=request.POST.getlist('check_1')
+                classid=request.POST.get('classid')
+                userid=request.POST.get('userid')
+
                 print(data)
                 print("present list-----")
-                print(plist)
+                print(classid,userid)
                 final_result=set(plist+data)
         return render(request,'classroom/collect.html')
 
@@ -155,5 +158,5 @@ def Tpost_form_upload(request):
             classID = form.cleaned_data['classID']
             py_obj=test_code()
             data=py_obj.code(classID, usrname)
-            print(data[0],data[1])
-    return render(request, 'classroom/absentees.html',{'data':list(data[0]),'data1':list(data[1])})
+            print(data[0],data[1],data[2],data[3])
+    return render(request, 'classroom/absentees.html',{'data':list(data[0]),'data1':list(data[1]),'classId':data[2],'usrname':data[3]})
