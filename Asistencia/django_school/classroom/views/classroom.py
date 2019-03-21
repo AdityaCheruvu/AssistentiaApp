@@ -45,6 +45,7 @@ def collect_data(request):
 class SignUpView(TemplateView):
     template_name = 'registration/signup.html'
 
+@login_required
 def home(request):
     if request.user.is_authenticated:
         if request.user.is_teacher:
@@ -61,7 +62,8 @@ class test_code:
         var1 = classId
         print(UsrName)
         print(classId)
-        MarkAttendanceCode.takeAttendance(classId, UsrName)
+        return MarkAttendanceCode.takeAttendance(classId, UsrName)
+
 
     def code1(self, studentID):
         global sid1
@@ -72,6 +74,12 @@ class test_code:
         global cid1
         cid1=classID
         print(cid1)
+
+    '''def collect_data(request):
+            if request.method=='POST':
+                    data=request.POST.getlist('check_1')
+                    print(data)
+            return render(request,'classroom/collect.html')'''
 
 
 def OneStudent(request):
@@ -142,5 +150,5 @@ def Tpost_form_upload(request):
         if form.is_valid():
             classID = form.cleaned_data['classID']
             py_obj=test_code()
-            py_obj.code(classID, usrname)
-    return render(request, 'classroom/MarkAttendance.html')
+            data=py_obj.code(classID, usrname)
+    return render(request, 'classroom/absentees.html',{'data':list(data)})
