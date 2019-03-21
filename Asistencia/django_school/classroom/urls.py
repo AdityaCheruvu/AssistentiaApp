@@ -13,6 +13,6 @@ urlpatterns = [
     path('getDetails/oneStudent/', classroom.OneStudent),
     path('getDetails/allStudents/', classroom.AllStudents1),
     path('takeAttendance/tpost_form_upload/', classroom.TClassDetails),
-    path('absentees/',classroom.Absentees,name='absentees'),
+    #path('absentees/',classroom.Absentees,name='absentees'),
     path('collect_data/',classroom.collect_data),
 ]

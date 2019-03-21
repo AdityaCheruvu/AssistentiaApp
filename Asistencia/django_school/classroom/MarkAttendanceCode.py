@@ -79,8 +79,8 @@ def takeAttendance(classToMarkAttendance, prof):
     except:
         pass
     os.mkdir(tmpDirLocal)
-    commandStartSystem = 'sshpass -p ' + '"' + raspiPass + '" ' + "ssh " + raspiUser + "@" + raspiIP + " python3.5 /home/pi/Assistentia/RaspberryPiCode/main.py"  
-    commandGetImgs = 'sshpass -p ' + '"' + raspiPass + '" ' + "scp " + raspiUser + "@" + raspiIP + ":" + tmpDirRpi + "* " + tmpDirLocal   
+    commandStartSystem = 'sshpass -p ' + '"' + raspiPass + '" ' + "ssh " + raspiUser + "@" + raspiIP + " python3.5 /home/pi/Assistentia/RaspberryPiCode/main.py"
+    commandGetImgs = 'sshpass -p ' + '"' + raspiPass + '" ' + "scp " + raspiUser + "@" + raspiIP + ":" + tmpDirRpi + "* " + tmpDirLocal
     process = subprocess.Popen(commandStartSystem, shell=True, stdout=subprocess.PIPE)
     process.wait()
     #if(process.returncode) not successful then alert user that raspi not booted up
@@ -110,7 +110,7 @@ def takeAttendance(classToMarkAttendance, prof):
     #code to return absentees list
     allStudents = {"15071A05I9", "15071A05N1", "15071A05L9", "15071A05L1", "15071A05I2", "15071A05I1", "15071A05J3"}
     absentees = allStudents - finalResult
-    print(absentees)
-    return (absentees, finalResult)
+    print("abseentees are",absentees)
+    return (absentees, list(finalResult))
 
 """--------------------------------------------------------"""

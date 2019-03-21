@@ -29,16 +29,20 @@ def Intital_page(request):
 
 
 #@classroom.route("./classroom/templates/absentees.html", methods=['POST'])
-def Absentees(request):
+'''def Absentees(request):
             ab=['aditya','pavan','satya','bharath','avinsah']
             some_var = request.POST.getlist('check_1')
             print(some_var)
-            return render(request, 'classroom/absentees.html',{'data':ab})
+            return render(request, 'classroom/absentees.html',{'data':ab})'''
 
 def collect_data(request):
         if request.method=='POST':
+                plist=request.POST.getlist('present')
                 data=request.POST.getlist('check_1')
                 print(data)
+                print("present list-----")
+                print(plist)
+                final_result=set(plist+data)
         return render(request,'classroom/collect.html')
 
 
@@ -151,4 +155,5 @@ def Tpost_form_upload(request):
             classID = form.cleaned_data['classID']
             py_obj=test_code()
             data=py_obj.code(classID, usrname)
-    return render(request, 'classroom/absentees.html',{'data':list(data)})
+            print(data[0],data[1])
+    return render(request, 'classroom/absentees.html',{'data':list(data[0]),'data1':list(data[1])})

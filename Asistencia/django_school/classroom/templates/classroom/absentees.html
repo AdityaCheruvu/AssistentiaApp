@@ -10,6 +10,9 @@ Absentees List
 <table style="margin-left:210x;">
 <tr style="color:red;font-size:30px;"">
 <td style="display: inline-block;">Name</td>
+{% for i in data1 %}
+<input style="display:None;" type="checkbox" name="present" value={{ i }} checked >
+{% endfor %}
 <td>Absent</td>
 </tr>
 {% for i in data %}
