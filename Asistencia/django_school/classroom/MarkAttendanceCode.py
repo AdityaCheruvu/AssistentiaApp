@@ -205,3 +205,52 @@ def callAbsenteesListAloud(absenteesList):
     process = subprocess.Popen(commandSSHCallOut, shell=True, stdout=subprocess.PIPE)
     process.wait()
     print(process.returncode)
+
+def getDailyAttendance(roll, day):
+    #getClass Id
+    cursor = sqlConn.cursor()
+    cursor.execute("select ClassId from classroom_classtostudent_mapping where RollNo=%s", (roll,))
+    classId = cursor.fetchall()[0][0]
+    
+    #getSubjectIds of students
+    cursor.execute("select SubId from classroom_proftosubmapping where ClassId=%s and RollNo=%s", (classId, roll))
+    try:
+        #print(cursor.fetchall())
+        subIdsOfStudent = cursor.fetchall() 
+        subIdsOfStudent = [i[0] for i in list(subIdsOfStudent)]
+        subIdsOfStudent.sort()
+        print(subIdsOfStudent)
+    except:
+        print("Student has no subjects enrolled")
+
+    #getSubjectIds of class
+    cursor.execute("select SubId, SubName from classroom_classtosub_mapping where ClassId=%s", (classId,))
+    classSubs = cursor.fetchall()
+    classSubIdToName = {}
+    for i in classSubs:
+        classSubIdToName[i[0]] = i[1]
+    
+    header = [classSubIdToName[i] for i in sorted(classSubIdToName.keys())]
+    attendance = ['0/0']*len(header)
+    totalAttended = 0
+    totalClassesDone = 0
+    for i in subIdsOfStudent:
+        data = (roll, day, i)
+        cursor.execute("select Attended from classroom_dailyattendance where RollNo=%s and Date_c=%s and SubId=%s", data)
+        try:
+            attended = cursor.fetchall()[0][0]
+            totalAttended+=attended
+        except:
+            attended=0
+        data = (classId, day, i)
+        cursor.execute("select Total from classroom_dailyattendancetotal where ClassId=%s and Date_c=%s and SubId=%s", data)
+        try:
+            totalClasses = cursor.fetchall()[0][0]
+            totalClassesDone+=totalClasses
+        except:
+            totalClasses=0
+        attendance[i-1] = str(attended) + '/' + str(totalClasses)       
+    header.append("Total")
+    attendance.append(str(totalAttended)+'/'+str(totalClassesDone))
+    return [header, attendance]
+    
