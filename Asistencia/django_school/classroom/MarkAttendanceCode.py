@@ -7,14 +7,14 @@ import face_recognition
 import pickle
 import cv2
 from matplotlib import pyplot as plt
-import sqlite3
-
+import mysql.connector as sql
+from datetime import datetime
 """-----------------------------------------"""
 
 #globalVals
 
 #set Raspi IP
-raspiIP = "192.168.0.7"
+raspiIP = "192.168.0.5"
 
 #setTrainingParams
 
@@ -29,8 +29,8 @@ serverUser = "aditya"
 classDir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "classes/")
 pickleName = "training.pickle"
 
-#sqlitePath
-sqlite3Path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'db.sqlite3')
+#sqlPath
+sqlConn = sql.connect(user="root", database="asistencia", host="localhost", password="toor")
 """-----------------------------------------"""
 
 def cropFaceData(pictureDat, locationOfFace):
@@ -63,22 +63,25 @@ def recognizePeople(data, imgPath):
     return names
 
 def subjectCodeOfClass(classToMarkAttendance, prof, cursor):
-    subCode = cursor.execute("select SubjectId from classroom_proftosub_mapping where Professor=?", (prof,))
-    subCode = subCode.fetchall()
-    if(len(subCode) == 0):
+    cursor.execute("select distinct SubId from classroom_proftosubmapping where Prof=%s and ClassId=%s", (prof,classToMarkAttendance))
+    subId = cursor.fetchall()
+    if(len(subId) <= 0):
         raise Exception("The professor doesnt teach this class!")
+    elif(len(subId) > 1):
+        raise Exception("One professor cannot teach more than one subject for a class")
+    print(subId)
+    return subId[0][0]
 
-def updateInDB(classToMarkAttendance, prof, subCode, cursor):
-    pass
-    #subCode = cursor.execute("select ")
-    #for roll in finalResult:
+def updateInDB(classToMarkAttendance, prof, subCode, finalSet):
+    cursor = sqlConn.cursor()
+    today = datetime.date(datetime.now())
 
 def takeAttendance(classToMarkAttendance, prof):
-    try:
+    """try:
         rmtree(tmpDirLocal)
     except:
         pass
-    os.mkdir(tmpDirLocal)
+    os.mkdir(tmpDirLocal)"""
     commandStartSystem = 'sshpass -p ' + '"' + raspiPass + '" ' + "ssh " + raspiUser + "@" + raspiIP + " python3.5 /home/pi/Assistentia/RaspberryPiCode/main.py"
     commandGetImgs = 'sshpass -p ' + '"' + raspiPass + '" ' + "scp " + raspiUser + "@" + raspiIP + ":" + tmpDirRpi + "* " + tmpDirLocal
     process = subprocess.Popen(commandStartSystem, shell=True, stdout=subprocess.PIPE)
@@ -88,10 +91,8 @@ def takeAttendance(classToMarkAttendance, prof):
     process = subprocess.Popen(commandGetImgs, shell=True, stdout=subprocess.PIPE)
     process.wait()
     print(process.returncode)
-
-    classToMarkAttendance = classToMarkAttendance+"/"
     print("[INFO] loading encodings...")
-    data = pickle.loads(open(classDir+classToMarkAttendance+pickleName, "rb").read())
+    data = pickle.loads(open(os.path.join(os.path.join(classDir,classToMarkAttendance), pickleName), "rb").read())
     finalResult = set()
     for i in os.listdir(tmpDirLocal):
         #print(i + " Results: " )
@@ -99,18 +100,20 @@ def takeAttendance(classToMarkAttendance, prof):
         finalResult.update(set(result))
         #print(result)
     # call update in db
-    conn = sqlite3.connect(sqlite3Path)
+    conn = sqlConn
     cursor = conn.cursor()
-    #subId = subjectCodeOfClass(classToMarkAttendance, prof, cursor)
+    subId = subjectCodeOfClass(classToMarkAttendance, prof, cursor)
+    dataToGetStudentList = (classToMarkAttendance, prof, subId)
+    cursor.execute("select distinct RollNo from classroom_proftosubmapping where ClassId=%s and Prof=%s and SubId=%s", dataToGetStudentList)
+    studentsOfThisClass = cursor.fetchall()
+    cursor.close()
+    studentsOfThisClass = set([i[0] for i in studentsOfThisClass])
+    finalResult = finalResult - (finalResult - studentsOfThisClass)
     print("The following are present")
     print(finalResult)
     #print(prof, subId)
-
-    """--------------------------------------------------------"""
     #code to return absentees list
-    allStudents = {"15071A05I9", "15071A05N1", "15071A05L9", "15071A05L1", "15071A05I2", "15071A05I1", "15071A05J3"}
-    absentees = allStudents - finalResult
+    absentees = studentsOfThisClass - finalResult
     print("abseentees are",absentees)
     return [absentees, list(finalResult)]
 
-"""--------------------------------------------------------"""

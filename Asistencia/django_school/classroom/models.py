@@ -48,54 +48,60 @@ class DetailsForm(ModelForm):
 		model=MyModel
 		fields=['year','department','section']
 
-class Event(models.Model):
-     name = models.CharField('Event Name', max_length=120)
-     event_date = models.DateTimeField('Event Date')
-     venue = models.CharField(max_length=120)
-     manager = models.CharField(max_length = 60)
-     description = models.TextField(blank=True)
 
 class ClassToStudent_Mapping(models.Model):
-    ClassId = models.TextField('Class ID')
-    RollNo = models.TextField('Roll Number')
+    ClassId = models.CharField(max_length=10)
+    RollNo = models.CharField(max_length=12)
 
     def __str__(self):
         return self.ClassId
 
     def __str__(self):
         return self.RollNo
+    class Meta:
+        unique_together = (('ClassId', 'RollNo'),)
 
 class ClassToSub_Mapping(models.Model):
-    ClassId = models.TextField('ClassID')
+    ClassId = models.CharField(max_length=10)
     SubId = models.IntegerField('SubId')
-    SubName = models.TextField('SubName')
+    SubName = models.CharField(max_length=12)
+    class Meta:
+        unique_together = (('ClassId', 'SubId', 'SubName'),)
 
 class CumulativeAttendance(models.Model):
-    RollNo = models.TextField('Roll Number')
+    RollNo = models.CharField(max_length=12)
     SubId = models.IntegerField('SubId')
     Attended = models.IntegerField('Attended')
+    class Meta:
+        unique_together = (('RollNo', 'SubId', 'Attended'),)
 
 class CumulativeAttendanceTotal(models.Model):
-    ClassId = models.TextField('ClassID')
+    ClassId = models.CharField(max_length=10)
     SubId = models.IntegerField('SubId')
     Total = models.IntegerField('Attended')
-
+    class Meta:
+        unique_together = (('ClassId', 'SubId', 'Total'),)
 
 class DailyAttendance(models.Model):
-    RollNo = models.TextField('Roll Number')
+    RollNo = models.CharField(max_length=12)
     Date_c = models.DateField('Date')
     SubId = models.IntegerField('SubId')
     Attended = models.IntegerField('Attended')
-
+    class Meta:
+        unique_together = (('RollNo', 'Date_c', 'SubId', 'Attended'),)
 
 class DailyAttendanceTotal(models.Model):
-    ClassId = models.TextField('ClassID')
+    ClassId = models.CharField(max_length=10)
     Date_c = models.DateField('Date')
     SubId = models.IntegerField('SubId')
     Total = models.IntegerField('Attended')
+    class Meta:
+        unique_together = (('ClassId', 'Date_c', 'SubId', 'Total'),)
 
 class ProfToSubMapping(models.Model):
-    ClassId = models.TextField('Class ID')
-    RollNo = RollNo = models.TextField('Roll Number')
-    Prof = models.TextField('Professor')
-    SubId = models.IntegerField('SubId')
+    ClassId = models.CharField(max_length=10)
+    RollNo = RollNo = models.CharField(max_length=12)
+    Prof = models.CharField(max_length=100)
+    SubId = models.IntegerField('SubId' )
+    class Meta:
+        unique_together = (('ClassId', 'RollNo', 'Prof', 'SubId'),)
