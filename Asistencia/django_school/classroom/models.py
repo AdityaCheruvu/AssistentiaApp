@@ -105,3 +105,10 @@ class ProfToSubMapping(models.Model):
     SubId = models.IntegerField('SubId' )
     class Meta:
         unique_together = (('ClassId', 'RollNo', 'Prof'),)
+
+class electiveMapping(models.Model):
+    ElecId = models.CharField(max_length=10)
+    Prof = models.CharField(max_length=100)
+    ClassId = models.CharField(max_length=10)
+    class Meta:
+        unique_together = (('ClassId', 'ElecId', 'Prof'),)
