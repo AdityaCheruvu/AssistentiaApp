@@ -253,4 +253,70 @@ def getDailyAttendance(roll, day):
     header.append("Total")
     attendance.append(str(totalAttended)+'/'+str(totalClassesDone))
     return [header, attendance]
+
+def getCumulativeAttendanceOfStudent(roll, classId, cursor):
+    #getSubjectIds of students
+    cursor.execute("select SubId from classroom_proftosubmapping where ClassId=%s and RollNo=%s", (classId, roll))
+    try:
+        #print(cursor.fetchall())
+        subIdsOfStudent = cursor.fetchall() 
+        subIdsOfStudent = [i[0] for i in list(subIdsOfStudent)]
+        subIdsOfStudent.sort()
+        print(subIdsOfStudent)
+    except:
+        print("Student has no subjects enrolled")
+    #getSubjectIds of class
+    cursor.execute("select SubId, SubName from classroom_classtosub_mapping where ClassId=%s", (classId,))
+    classSubs = cursor.fetchall()
+    classSubIdToName = {}
+    for i in classSubs:
+        classSubIdToName[i[0]] = i[1]
     
+    header = classSubIdToName.keys()
+    attendance = ['0/0']*len(header)
+    totalAttended = 0
+    totalClassesDone = 0
+
+    for i in subIdsOfStudent:
+        data = (roll, i)
+        cursor.execute("select Attended from classroom_cumulativeattendance where RollNo=%s and SubId=%s", data)
+        try:
+            attended = cursor.fetchall()[0][0]
+            totalAttended+=attended
+        except:
+            attended=0
+        data = (classId, i)
+        cursor.execute("select Total from classroom_dailyattendancetotal where ClassId=%s and SubId=%s", data)
+        try:
+            totalClasses = cursor.fetchall()[0][0]
+            totalClassesDone+=totalClasses
+        except:
+            totalClasses=0
+        attendance[i-1] = str(attended) + '/' + str(totalClasses)
+    percentage = round((totalAttended/totalClassesDone)*10000)/100    
+    attendance = [roll] + attendance + [str(totalAttended) + '/' + str(totalClassesDone), percentage]
+    return attendance    
+
+def getHeader(classId, cursor):
+    cursor.execute("select SubId, SubName from classroom_classtosub_mapping where ClassId=%s", (classId,))
+    classSubs = cursor.fetchall()
+    classSubIdToName = {}
+    for i in classSubs:
+        classSubIdToName[i[0]] = i[1]
+    
+    header = [classSubIdToName[i] for i in sorted(classSubIdToName.keys())]
+    return ["Roll Number"] + header + ["Total" + "Percentage"]
+
+def getCumulativeAttendanceOfAStudent(roll):
+    #getClass Id
+    cursor = sqlConn.cursor()
+    cursor.execute("select ClassId from classroom_classtostudent_mapping where RollNo=%s", (roll,))
+    classId = cursor.fetchall()[0][0]
+    return [getHeader(classId, cursor), getCumulativeAttendanceOfStudent(roll, classId, cursor)]
+
+def getCumulativeAttendanceOfStudents(classId):    
+    cursor = sqlConn.cursor()
+    cursor.execute("select RollNo from classroom_classtostudent_mapping where ClassId=%s", (classId,))
+    rolls = [i[0] for i in cursor.fetchall()]
+    rolls.sort()
+    return [getHeader(classId, cursor)] + [getCumulativeAttendanceOfStudent(roll, classId, cursor) for roll in rolls]
