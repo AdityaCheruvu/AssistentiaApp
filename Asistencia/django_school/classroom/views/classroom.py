@@ -36,17 +36,21 @@ def Intital_page(request):
             return render(request, 'classroom/absentees.html',{'data':ab})'''
 
 def collect_data(request):
-        if request.method=='POST':
-                plist=request.POST.getlist('present')
-                data=request.POST.getlist('check_1')
-                classid=request.POST.get('classid')
-                userid=request.POST.get('userid')
+    if request.user.is_authenticated:
+        if request.user.is_teacher:
+            if request.method=='POST':
+                    plist=request.POST.getlist('present')
+                    data=request.POST.getlist('check_1')
+                    classid=request.POST.get('classid')
+                    userid=request.POST.get('userid')
 
-                print(data)
-                print("present list-----")
-                print(classid,userid)
-                final_result=set(plist+data)
-        return render(request,'classroom/collect.html')
+                    print(data)
+                    print("present list-----")
+                    print(classid,userid)
+                    final_result=set(plist+data)
+            return render(request,'classroom/collect.html')
+        else:
+            return render(request, 'classroom/NotAuthenticated.html')
 
 
 class SignUpView(TemplateView):
@@ -90,20 +94,35 @@ class test_code:
 
 
 def OneStudent(request):
-        return render(request, 'classroom/OneStudent.html')
+    if request.user.is_authenticated:
+        if request.user.is_teacher:
+            return render(request, 'classroom/OneStudent.html')
+        else:
+            return render(request, 'classroom/NotAuthenticated.html')
 
 def AllStudents1(request):
-        return render(request, 'classroom/AllStudents.html')
+    if request.user.is_authenticated:
+        if request.user.is_teacher:
+            return render(request, 'classroom/AllStudents.html')
+        else:
+            return render(request, 'classroom/NotAuthenticated.html')
 
 
 def Details(request):
-        now = timezone.now()
-        users = User.objects.all()
-        return render(request, 'classroom/GetAttendnaceDetails.html', {'users': users})
+    if request.user.is_authenticated:
+        if request.user.is_teacher:
+            now = timezone.now()
+            users = User.objects.all()
+            return render(request, 'classroom/GetAttendnaceDetails.html', {'users': users})
+        else:
+            return render(request, 'classroom/NotAuthenticated.html')
 
 def TClassDetails(request):
-        return render(request, 'classroom/TGetClassDetails.html')
-
+    if request.user.is_authenticated:
+        if request.user.is_teacher:
+            return render(request, 'classroom/TGetClassDetails.html')
+        else:
+            return render(request, 'classroom/NotAuthenticated.html')
 
 def AllStudents(request):
         now = timezone.now()
@@ -124,9 +143,13 @@ def AllStudents(request):
             return render(request, 'classroom/None.html', {'users': users})
 
 def IndividualStudentForStudentLogin(request):
-        now = timezone.now()
-        users = User.objects.all()
-        return render(request, 'classroom/IndividualStudentDetailsForStudentLogin.html', {'users': users})
+    if request.user.is_authenticated:
+        if request.user.is_student:
+            now = timezone.now()
+            users = User.objects.all()
+            return render(request, 'classroom/IndividualStudentDetailsForStudentLogin.html', {'users': users})
+        else:
+            return render(request, 'classroom/NotAuthenticated.html')
 
 
 def IndividualStudent(request):
@@ -148,15 +171,19 @@ def IndividualStudent(request):
 
 
 def Tpost_form_upload(request):
-    if request.method == 'GET':
-        form = PostForm()
-    else:
-        form = PostForm(request.POST)
-        usrname = request.user.username
+    if request.user.is_authenticated:
+        if request.user.is_teacher:
+            if request.method == 'GET':
+                form = PostForm()
+            else:
+                form = PostForm(request.POST)
+                usrname = request.user.username
 
-        if form.is_valid():
-            classID = form.cleaned_data['classID']
-            py_obj=test_code()
-            data=py_obj.code(classID, usrname)
-            print(data[0],data[1],data[2],data[3])
-    return render(request, 'classroom/absentees.html',{'data':list(data[0]),'data1':list(data[1]),'classId':data[2],'usrname':data[3]})
+                if form.is_valid():
+                    classID = form.cleaned_data['classID']
+                    py_obj=test_code()
+                    data=py_obj.code(classID, usrname)
+                    print(data[0],data[1],data[2],data[3])
+            return render(request, 'classroom/absentees.html',{'data':list(data[0]),'data1':list(data[1]),'classId':data[2],'usrname':data[3]})
+        else:
+            return render(request, 'classroom/NotAuthenticated.html')
