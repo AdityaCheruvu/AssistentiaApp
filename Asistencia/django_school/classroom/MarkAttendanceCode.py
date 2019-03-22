@@ -174,3 +174,9 @@ def takeAttendance(classToMarkAttendance, prof):
     print("abseentees are",absentees)
     return [absentees, list(finalResult)]
 
+def callAbsenteesListAloud(absenteesList):
+    absenteesCommand = "say " + "Absentees are:, " + ", ".join([" ".join(list(i)) for i in sorted(absenteesList)])
+    commandSSHCallOut = 'sshpass -p ' + '"' + raspiPass + '" ' + "ssh " + raspiUser + "@" + raspiIP + " " + absenteesCommand
+    process = subprocess.Popen(commandSSHCallOut, shell=True, stdout=subprocess.PIPE)
+    process.wait()
+    print(process.returncode)
