@@ -49,6 +49,7 @@ def collect_data(request):
                     print(classid,userid)
                     final_result=set(plist+data)
                     print(final_result) 
+                    MarkAttendanceCode.updateInDB(classid, userid, final_result)
             return render(request,'classroom/collect.html')
         else:
             return render(request, 'classroom/NotAuthenticated.html')

@@ -9,6 +9,7 @@ import cv2
 from matplotlib import pyplot as plt
 import mysql.connector as sql
 from datetime import datetime
+import traceback
 """-----------------------------------------"""
 
 #globalVals
@@ -72,16 +73,72 @@ def subjectCodeOfClass(classToMarkAttendance, prof, cursor):
     print(subId)
     return subId[0][0]
 
-def updateInDB(classToMarkAttendance, prof, subCode, finalSet):
+def updateInDB(classToMarkAttendance, prof, finalSet):
     cursor = sqlConn.cursor()
-    today = datetime.date(datetime.now())
+    today = datetime.now().strftime("%Y-%m-%d")
+    SubId = subjectCodeOfClass(classToMarkAttendance, prof, cursor)
+    print("------")
+    try:
+        #Update in Cumulative Total table
+        try:
+            print(str(1))
+            data = (classToMarkAttendance, SubId, 1)
+            cursor.execute("insert into classroom_cumulativeattendancetotal(ClassId, SubId, Total) values(%s, %s, %s)", data)
+            
+        except:
+            print(str(2))
+            data = (classToMarkAttendance, SubId)
+            cursor.execute("update classroom_cumulativeattendancetotal set Total=Total+1 where ClassId=%s and SubId=%s", data)
+            
+        #Update in Daily Total table
+        try:
+            print(str(3))
+            data = (classToMarkAttendance, today, SubId, 1)
+            cursor.execute("insert into classroom_dailyattendancetotal(ClassId, Date_c, SubId, Total) values(%s, %s, %s, %s)", data)
+            
+        except:
+            print(str(4))
+            data = (classToMarkAttendance, SubId, today)
+            cursor.execute("update classroom_dailyattendancetotal set Total=Total+1 where ClassId=%s and SubId=%s and Date_c=%s", data)
+            
+        #Update Cumulative table
+        for roll in finalSet:
+            try:
+                print(str(5))
+                data = (roll, SubId, 1)
+                cursor.execute("insert into classroom_cumulativeattendance(RollNo, SubId, Attended) values(%s, %s, %s)", data)
+                
+            except:
+                print(str(6))
+                data = (roll, SubId)
+                cursor.execute("update classroom_cumulativeattendance set Attended=Attended+1 where RollNo=%s and SubId=%s", data)
+                
+        #Update Daily table
+        for roll in finalSet:
+            try:
+                print(str(7))
+                data = (roll, today, SubId, 1)
+                cursor.execute("insert into classroom_dailyattendance(RollNo, Date_c, SubId, Attended) values(%s, %s, %s, %s)", data)
+                
+            except:
+                print(str(8))
+                data = (roll, SubId, today)
+                cursor.execute("update classroom_dailyattendance set Attended=Attended+1 where RollNo=%s and SubId=%s and Date_c=%s", data)
+                
+        sqlConn.commit()
+        print("Marked in DB successfully!")
+    except Exception as e:
+        print(e)
+        traceback.print_exc()
+        sqlConn.rollback()
+        print("An Error occured and insertion was not possible, please try again!")
 
 def takeAttendance(classToMarkAttendance, prof):
-    """try:
+    try:
         rmtree(tmpDirLocal)
     except:
         pass
-    os.mkdir(tmpDirLocal)"""
+    os.mkdir(tmpDirLocal)
     commandStartSystem = 'sshpass -p ' + '"' + raspiPass + '" ' + "ssh " + raspiUser + "@" + raspiIP + " python3.5 /home/pi/Assistentia/RaspberryPiCode/main.py"
     commandGetImgs = 'sshpass -p ' + '"' + raspiPass + '" ' + "scp " + raspiUser + "@" + raspiIP + ":" + tmpDirRpi + "* " + tmpDirLocal
     process = subprocess.Popen(commandStartSystem, shell=True, stdout=subprocess.PIPE)
