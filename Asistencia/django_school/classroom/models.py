@@ -66,21 +66,21 @@ class ClassToSub_Mapping(models.Model):
     SubId = models.IntegerField('SubId')
     SubName = models.CharField(max_length=12)
     class Meta:
-        unique_together = (('ClassId', 'SubId', 'SubName'),)
+        unique_together = (('ClassId', 'SubId'),)
 
 class CumulativeAttendance(models.Model):
     RollNo = models.CharField(max_length=12)
     SubId = models.IntegerField('SubId')
     Attended = models.IntegerField('Attended')
     class Meta:
-        unique_together = (('RollNo', 'SubId', 'Attended'),)
+        unique_together = (('RollNo', 'SubId'),)
 
 class CumulativeAttendanceTotal(models.Model):
     ClassId = models.CharField(max_length=10)
     SubId = models.IntegerField('SubId')
     Total = models.IntegerField('Attended')
     class Meta:
-        unique_together = (('ClassId', 'SubId', 'Total'),)
+        unique_together = (('ClassId', 'SubId'),)
 
 class DailyAttendance(models.Model):
     RollNo = models.CharField(max_length=12)
@@ -88,7 +88,7 @@ class DailyAttendance(models.Model):
     SubId = models.IntegerField('SubId')
     Attended = models.IntegerField('Attended')
     class Meta:
-        unique_together = (('RollNo', 'Date_c', 'SubId', 'Attended'),)
+        unique_together = (('RollNo', 'Date_c', 'SubId'),)
 
 class DailyAttendanceTotal(models.Model):
     ClassId = models.CharField(max_length=10)
@@ -96,7 +96,7 @@ class DailyAttendanceTotal(models.Model):
     SubId = models.IntegerField('SubId')
     Total = models.IntegerField('Attended')
     class Meta:
-        unique_together = (('ClassId', 'Date_c', 'SubId', 'Total'),)
+        unique_together = (('ClassId', 'Date_c', 'SubId'),)
 
 class ProfToSubMapping(models.Model):
     ClassId = models.CharField(max_length=10)
@@ -104,4 +104,4 @@ class ProfToSubMapping(models.Model):
     Prof = models.CharField(max_length=100)
     SubId = models.IntegerField('SubId' )
     class Meta:
-        unique_together = (('ClassId', 'RollNo', 'Prof', 'SubId'),)
+        unique_together = (('ClassId', 'RollNo', 'Prof'),)

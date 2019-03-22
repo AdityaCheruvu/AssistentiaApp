@@ -15,7 +15,7 @@ import traceback
 #globalVals
 
 #set Raspi IP
-raspiIP = "192.168.0.5"
+raspiIP = "192.168.0.6"
 
 #setTrainingParams
 
