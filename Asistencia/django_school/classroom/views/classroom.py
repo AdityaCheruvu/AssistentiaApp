@@ -39,17 +39,27 @@ def collect_data(request):
     if request.user.is_authenticated:
         if request.user.is_teacher:
             if request.method=='POST':
-                    plist=request.POST.getlist('present')
+                    studentToClassMap = MACObj.getStudenToClassMap()
+                    plist = request.POST.getlist('present')
                     data=request.POST.getlist('check_1')
                     classid=request.POST.get('classid')
                     userid=request.POST.get('userid')
-
                     print(data)
                     print("present list-----")
                     print(classid,userid)
+                    print(plist)
+                    print(data)
+                    print(studentToClassMap)
                     final_result=set(plist+data)
                     print(final_result) 
-                    MarkAttendanceCode.updateInDB(classid, userid, final_result)
+                    classToStudent = {}
+                    for i in final_result:
+                        try:
+                            classToStudent[studentToClassMap[i]].append(i)
+                        except:
+                            classToStudent[studentToClassMap[i]] = [i]
+                    for classid, final_result in classToStudent.items():
+                        MarkAttendanceCode.updateInDB(classid, userid, final_result)
             return render(request,'classroom/collect.html')
         else:
             return render(request, 'classroom/NotAuthenticated.html')
@@ -75,7 +85,11 @@ class test_code:
         var1 = classId
         print(UsrName)
         print(classId)
-        return MarkAttendanceCode.takeAttendance(classId, UsrName) + [classId, UsrName]
+        global MACObj
+        MACObj = MarkAttendanceCode.AttendanceTake()
+        classIds = MarkAttendanceCode.getClassesFromElective(classId, UsrName)
+        print("ClassIDs = ", classIds)
+        return MACObj.takeAttendance(classIds, UsrName) + [classId, UsrName]
 
 
     def code1(self, studentID):

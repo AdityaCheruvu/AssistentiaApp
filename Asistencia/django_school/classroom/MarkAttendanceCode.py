@@ -133,46 +133,71 @@ def updateInDB(classToMarkAttendance, prof, finalSet):
         sqlConn.rollback()
         print("An Error occured and insertion was not possible, please try again!")
 
-def takeAttendance(classToMarkAttendance, prof):
-    try:
-        rmtree(tmpDirLocal)
-    except:
-        pass
-    os.mkdir(tmpDirLocal)
-    commandStartSystem = 'sshpass -p ' + '"' + raspiPass + '" ' + "ssh " + raspiUser + "@" + raspiIP + " python3.5 /home/pi/Assistentia/RaspberryPiCode/main.py"
-    commandGetImgs = 'sshpass -p ' + '"' + raspiPass + '" ' + "scp " + raspiUser + "@" + raspiIP + ":" + tmpDirRpi + "* " + tmpDirLocal
-    process = subprocess.Popen(commandStartSystem, shell=True, stdout=subprocess.PIPE)
-    process.wait()
-    #if(process.returncode) not successful then alert user that raspi not booted up
-    print(process.returncode)
-    process = subprocess.Popen(commandGetImgs, shell=True, stdout=subprocess.PIPE)
-    process.wait()
-    print(process.returncode)
-    print("[INFO] loading encodings...")
-    data = pickle.loads(open(os.path.join(os.path.join(classDir,classToMarkAttendance), pickleName), "rb").read())
-    finalResult = set()
-    for i in os.listdir(tmpDirLocal):
-        #print(i + " Results: " )
-        result = recognizePeople(data, tmpDirLocal+i)
-        finalResult.update(set(result))
-        #print(result)
-    # call update in db
-    conn = sqlConn
-    cursor = conn.cursor()
-    subId = subjectCodeOfClass(classToMarkAttendance, prof, cursor)
-    dataToGetStudentList = (classToMarkAttendance, prof, subId)
-    cursor.execute("select distinct RollNo from classroom_proftosubmapping where ClassId=%s and Prof=%s and SubId=%s", dataToGetStudentList)
-    studentsOfThisClass = cursor.fetchall()
-    cursor.close()
-    studentsOfThisClass = set([i[0] for i in studentsOfThisClass])
-    finalResult = finalResult - (finalResult - studentsOfThisClass)
-    print("The following are present")
-    print(finalResult)
-    #print(prof, subId)
-    #code to return absentees list
-    absentees = studentsOfThisClass - finalResult
-    print("abseentees are",absentees)
-    return [absentees, list(finalResult)]
+def getClassesFromElective(elecID, prof):
+    cursor = sqlConn.cursor()
+    data = (prof, elecID)
+    cursor.execute("select ClassId from classroom_electivemapping where Prof=%s and ElecId=%s", data)
+    classIds = cursor.fetchall()
+    if(len(classIds) == 0):
+        return [elecID]
+    else:
+        return [i[0] for i in classIds]
+
+class AttendanceTake:
+    def __init__(self):
+        self.StudentToClassMap = {}
+    def takeAttendance(self, classesToMarkAttendance, prof):
+        try:
+            rmtree(tmpDirLocal)
+        except:
+            pass
+        os.mkdir(tmpDirLocal)
+        commandStartSystem = 'sshpass -p ' + '"' + raspiPass + '" ' + "ssh " + raspiUser + "@" + raspiIP + " python3.5 /home/pi/Assistentia/RaspberryPiCode/main.py"
+        commandGetImgs = 'sshpass -p ' + '"' + raspiPass + '" ' + "scp " + raspiUser + "@" + raspiIP + ":" + tmpDirRpi + "* " + tmpDirLocal
+        process = subprocess.Popen(commandStartSystem, shell=True, stdout=subprocess.PIPE)
+        process.wait()
+        #if(process.returncode) not successful then alert user that raspi not booted up
+        print(process.returncode)
+        process = subprocess.Popen(commandGetImgs, shell=True, stdout=subprocess.PIPE)
+        process.wait()
+        print(process.returncode)
+        finalResultOfAllClasses = set()
+        absenteesOfAllClasses = set()
+        for classToMarkAttendance in classesToMarkAttendance:
+            print("[INFO] loading encodings...")        
+            data = pickle.loads(open(os.path.join(os.path.join(classDir,classToMarkAttendance), pickleName), "rb").read())
+            finalResult = set()
+            for i in os.listdir(tmpDirLocal):
+                #print(i + " Results: " )
+                result = recognizePeople(data, tmpDirLocal+i)
+                finalResult.update(set(result))
+                #print(result)
+            # call update in db
+            conn = sqlConn
+            cursor = conn.cursor()
+            subId = subjectCodeOfClass(classToMarkAttendance, prof, cursor)
+            dataToGetStudentList = (classToMarkAttendance, prof, subId)
+            cursor.execute("select distinct RollNo from classroom_proftosubmapping where ClassId=%s and Prof=%s and SubId=%s", dataToGetStudentList)
+            studentsOfThisClass = cursor.fetchall()
+            cursor.close()
+            studentsOfThisClass = set([i[0] for i in studentsOfThisClass])
+            finalResult = finalResult - (finalResult - studentsOfThisClass)
+            print("The following are present")
+            print(finalResult)
+            #print(prof, subId)
+            #code to return absentees list
+            absentees = studentsOfThisClass - finalResult
+            finalResultOfAllClasses.update(finalResult)
+            absenteesOfAllClasses.update(absentees)
+            print("abseentees are",absentees)
+            for i in finalResult:
+                self.StudentToClassMap[i] = classToMarkAttendance
+            for i in absentees:
+                self.StudentToClassMap[i] = classToMarkAttendance
+        return [absenteesOfAllClasses, list(finalResultOfAllClasses)]
+
+    def getStudenToClassMap(self):
+        return self.StudentToClassMap
 
 def callAbsenteesListAloud(absenteesList):
     absenteesCommand = "say " + "Absentees are:, " + ", ".join([" ".join(list(i)) for i in sorted(absenteesList)])

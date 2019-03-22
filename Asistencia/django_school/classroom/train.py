@@ -15,11 +15,11 @@ ap.add_argument("-d", "--detection-method", type=str, default="hog",
 args = vars(ap.parse_args())
 classDir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "classes/")
 try:
-	os.mkdir(os.path.join(classDir, os.path.basename(os.path.dirname(args["dataset"]))))
+	os.mkdir(os.path.join(classDir, os.path.basename((args["dataset"]))))
 except:
 	pass
 imagePaths = list(paths.list_images(args["dataset"]))
-targetDirForEncodings = os.path.join(classDir, os.path.basename(os.path.dirname(args["dataset"])))
+targetDirForEncodings = os.path.join(classDir, os.path.basename(args["dataset"]))
 encodingsFile = "training.pickle"
 knownEncodings = []
 knownNames = []
