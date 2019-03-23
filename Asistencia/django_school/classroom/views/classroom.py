@@ -20,12 +20,20 @@ from classroom import MarkAttendanceCode
 from classroom.forms import PostForm
 import subprocess
 from subprocess import call
+from django.contrib.auth.decorators import login_required
+from django.contrib import auth
 
 var1 = ''
 cid1=''
 
 def Intital_page(request):
     return render(request, 'classroom/select.html')
+
+
+@login_required
+def logout(request):
+        auth.logout(request)
+        return redirect('login')
 
 
 #@classroom.route("./classroom/templates/absentees.html", methods=['POST'])
