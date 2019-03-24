@@ -35,6 +35,7 @@
 
   <p>
     </br>
+    <h1>Attendance Details of all students of class is: </h1>
     <br>
   </p>
 
@@ -44,25 +45,18 @@
   {% for user in users %}
 
   <p>
-    <h2>AttendanceDetails of Students of <strong>{{user.ClassId}}</strong> is: </h2>
-  </p>
-
-  </br>
-
-  <table>
-    <tr>
-      <th><h2>Id</h2></th>
-      <th><h2>UserName</h2></th>
-      <th><h2>LastLogin</h2></th>
-          <tr>
-            <td><h2>{{user.id}}</h2></td>
-            <td><h2>{{user.ClassId}}</h2></td>
-
-            <td><h2>{{user.RollNo}}</h2></td>
-          </tr>
+    </p>
+      </br>
+        <table>
+            <tr>
+              <tr>
+                <td><h2>{{user.0}}</h2></td>
+                <td><h2>{{user.2}}</h2></td>
+                <td><h2>{{user.3}}</h2></td>
+              </tr>
       {% endfor %}
-    </h2>
-  </table>
+  </h2>
+      </table>
 
 </html>
 

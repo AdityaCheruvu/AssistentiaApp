@@ -59,7 +59,7 @@ def collect_data(request):
                     print(data)
                     print(studentToClassMap)
                     final_result=set(plist+data)
-                    print(final_result) 
+                    print(final_result)
                     classToStudent = {}
                     for i in final_result:
                         try:
@@ -84,6 +84,8 @@ def home(request):
             usrname = request.user.username
             return render(request, 'classroom/teachers/LecturerLogin.html')
         else:
+            global stuUsrname
+            stuUsrname = request.user.username
             return render(request, 'classroom/students/StudentLogin.html')
     return render(request, 'registration/login.html')
 
@@ -160,9 +162,10 @@ def AllStudents(request):
                 py_obj=test_code()
                 py_obj.code2(classID)
         print(cid1)
-        users = ClassToStudent_Mapping.objects.filter(ClassId = cid1)
+        #users = ClassToStudent_Mapping.objects.filter(ClassId = cid1)
+        users = MarkAttendanceCode.getCumulativeAttendanceOfStudents(cid1);
         if(bool(users)):
-            return render(request, 'classroom/AllStudentDetails.html', {'users': users})
+            return render(request, 'classroom/AllStudentDetails.html', {'users': users}, {'classId' : cid1},)
         else:
             return render(request, 'classroom/None.html', {'users': users})
 
@@ -170,7 +173,9 @@ def IndividualStudentForStudentLogin(request):
     if request.user.is_authenticated:
         if request.user.is_student:
             now = timezone.now()
-            users = User.objects.all()
+            #users = User.objects.all()
+            users = MarkAttendanceCode.getCumulativeAttendanceOfAStudent(stuUsrname)
+            print(users)
             return render(request, 'classroom/IndividualStudentDetailsForStudentLogin.html', {'users': users})
         else:
             return render(request, 'classroom/NotAuthenticated.html')
@@ -187,7 +192,9 @@ def IndividualStudent(request):
                 studentID = form.cleaned_data['classID']
                 py_obj=test_code()
                 py_obj.code1(studentID)
-        users = User.objects.filter(username = sid1)
+        users = MarkAttendanceCode.getCumulativeAttendanceOfAStudent(studentID)
+        print(users);
+        #users = User.objects.filter(username = sid1)
         if(bool(users)):
             return render(request, 'classroom/IndividualStudentDetails.html', {'users': users})
         else:

@@ -40,26 +40,26 @@
     </p>
 
     <p>
-        <h1>Attendance Details of student is: </h1>
+        <h1>Attendance Details of <strong>{{users.1.0}}</strong> is: </h1>
     </p>
 
     </br>
     </br>
-
+    <p>{{user.0.0}}</p>
     <table width=100%>
       <tr>
-        <th><h2>Id</h2></th>
-        <th><h2>UserName</h2></th>
-        <th><h2>LastLogin</h2></th>
         {% for user in users %}
-          {%if user.is_student%}
             <tr>
-              <td><h2>{{user.id}}</h2></td>
-              <td><h2>{{user.username}}</h2></td>
-
-              <td><h2>{{user.last_login}}</h2></td>
+              <td><h2>{{user.0}}</h2></td>
+              <td><h2>{{user.1}}</h2></td>
+              <td><h2>{{user.2}}</h2></td>
+              <td><h2>{{user.3}}</h2></td>
+              <td><h2>{{user.4}}</h2></td>
+              <td><h2>{{user.5}}</h2></td>
+              <td><h2>{{user.6}}</h2></td>
+              <td><h2>{{user.7}}</h2></td>
             </tr>
-          {%endif%}
+
         {% endfor %}
       </h2>
     </table>
