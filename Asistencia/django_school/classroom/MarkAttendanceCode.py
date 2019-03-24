@@ -31,7 +31,7 @@ classDir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "classes/")
 pickleName = "training.pickle"
 
 #sqlPath
-sqlConn = sql.connect(user="root", database="asistencia", host="localhost", password="toor")
+sqlConn = sql.connect(user="root", database="asistencia", host="127.0.0.1", password="nani@712")
 """-----------------------------------------"""
 
 def cropFaceData(pictureDat, locationOfFace):
@@ -84,47 +84,47 @@ def updateInDB(classToMarkAttendance, prof, finalSet):
             print(str(1))
             data = (classToMarkAttendance, SubId, 1)
             cursor.execute("insert into classroom_cumulativeattendancetotal(ClassId, SubId, Total) values(%s, %s, %s)", data)
-            
+
         except:
             print(str(2))
             data = (classToMarkAttendance, SubId)
             cursor.execute("update classroom_cumulativeattendancetotal set Total=Total+1 where ClassId=%s and SubId=%s", data)
-            
+
         #Update in Daily Total table
         try:
             print(str(3))
             data = (classToMarkAttendance, today, SubId, 1)
             cursor.execute("insert into classroom_dailyattendancetotal(ClassId, Date_c, SubId, Total) values(%s, %s, %s, %s)", data)
-            
+
         except:
             print(str(4))
             data = (classToMarkAttendance, SubId, today)
             cursor.execute("update classroom_dailyattendancetotal set Total=Total+1 where ClassId=%s and SubId=%s and Date_c=%s", data)
-            
+
         #Update Cumulative table
         for roll in finalSet:
             try:
                 print(str(5))
                 data = (roll, SubId, 1)
                 cursor.execute("insert into classroom_cumulativeattendance(RollNo, SubId, Attended) values(%s, %s, %s)", data)
-                
+
             except:
                 print(str(6))
                 data = (roll, SubId)
                 cursor.execute("update classroom_cumulativeattendance set Attended=Attended+1 where RollNo=%s and SubId=%s", data)
-                
+
         #Update Daily table
         for roll in finalSet:
             try:
                 print(str(7))
                 data = (roll, today, SubId, 1)
                 cursor.execute("insert into classroom_dailyattendance(RollNo, Date_c, SubId, Attended) values(%s, %s, %s, %s)", data)
-                
+
             except:
                 print(str(8))
                 data = (roll, SubId, today)
                 cursor.execute("update classroom_dailyattendance set Attended=Attended+1 where RollNo=%s and SubId=%s and Date_c=%s", data)
-                
+
         sqlConn.commit()
         print("Marked in DB successfully!")
     except Exception as e:
@@ -164,7 +164,7 @@ class AttendanceTake:
         finalResultOfAllClasses = set()
         absenteesOfAllClasses = set()
         for classToMarkAttendance in classesToMarkAttendance:
-            print("[INFO] loading encodings...")        
+            print("[INFO] loading encodings...")
             data = pickle.loads(open(os.path.join(os.path.join(classDir,classToMarkAttendance), pickleName), "rb").read())
             finalResult = set()
             for i in os.listdir(tmpDirLocal):
@@ -211,12 +211,12 @@ def getDailyAttendance(roll, day):
     cursor = sqlConn.cursor()
     cursor.execute("select ClassId from classroom_classtostudent_mapping where RollNo=%s", (roll,))
     classId = cursor.fetchall()[0][0]
-    
+
     #getSubjectIds of students
     cursor.execute("select SubId from classroom_proftosubmapping where ClassId=%s and RollNo=%s", (classId, roll))
     try:
         #print(cursor.fetchall())
-        subIdsOfStudent = cursor.fetchall() 
+        subIdsOfStudent = cursor.fetchall()
         subIdsOfStudent = [i[0] for i in list(subIdsOfStudent)]
         subIdsOfStudent.sort()
         print(subIdsOfStudent)
@@ -229,7 +229,7 @@ def getDailyAttendance(roll, day):
     classSubIdToName = {}
     for i in classSubs:
         classSubIdToName[i[0]] = i[1]
-    
+
     header = [classSubIdToName[i] for i in sorted(classSubIdToName.keys())]
     attendance = ['0/0']*len(header)
     totalAttended = 0
@@ -249,7 +249,7 @@ def getDailyAttendance(roll, day):
             totalClassesDone+=totalClasses
         except:
             totalClasses=0
-        attendance[i-1] = str(attended) + '/' + str(totalClasses)       
+        attendance[i-1] = str(attended) + '/' + str(totalClasses)
     header.append("Total")
     attendance.append(str(totalAttended)+'/'+str(totalClassesDone))
     return [header, attendance]
@@ -259,7 +259,7 @@ def getCumulativeAttendanceOfStudent(roll, classId, cursor):
     cursor.execute("select SubId from classroom_proftosubmapping where ClassId=%s and RollNo=%s", (classId, roll))
     try:
         #print(cursor.fetchall())
-        subIdsOfStudent = cursor.fetchall() 
+        subIdsOfStudent = cursor.fetchall()
         subIdsOfStudent = [i[0] for i in list(subIdsOfStudent)]
         subIdsOfStudent.sort()
         print(subIdsOfStudent)
@@ -271,7 +271,7 @@ def getCumulativeAttendanceOfStudent(roll, classId, cursor):
     classSubIdToName = {}
     for i in classSubs:
         classSubIdToName[i[0]] = i[1]
-    
+
     header = classSubIdToName.keys()
     attendance = ['0/0']*len(header)
     totalAttended = 0
@@ -293,9 +293,9 @@ def getCumulativeAttendanceOfStudent(roll, classId, cursor):
         except:
             totalClasses=0
         attendance[i-1] = str(attended) + '/' + str(totalClasses)
-    percentage = round((totalAttended/totalClassesDone)*10000)/100    
+    percentage = round((totalAttended/totalClassesDone)*10000)/100
     attendance = [roll] + attendance + [str(totalAttended) + '/' + str(totalClassesDone), percentage]
-    return attendance    
+    return attendance
 
 def getHeader(classId, cursor):
     cursor.execute("select SubId, SubName from classroom_classtosub_mapping where ClassId=%s", (classId,))
@@ -303,7 +303,7 @@ def getHeader(classId, cursor):
     classSubIdToName = {}
     for i in classSubs:
         classSubIdToName[i[0]] = i[1]
-    
+
     header = [classSubIdToName[i] for i in sorted(classSubIdToName.keys())]
     return ["Roll Number"] + header + ["Total" + "Percentage"]
 
@@ -314,7 +314,7 @@ def getCumulativeAttendanceOfAStudent(roll):
     classId = cursor.fetchall()[0][0]
     return [getHeader(classId, cursor), getCumulativeAttendanceOfStudent(roll, classId, cursor)]
 
-def getCumulativeAttendanceOfStudents(classId):    
+def getCumulativeAttendanceOfStudents(classId):
     cursor = sqlConn.cursor()
     cursor.execute("select RollNo from classroom_classtostudent_mapping where ClassId=%s", (classId,))
     rolls = [i[0] for i in cursor.fetchall()]
