@@ -12,7 +12,11 @@ urlpatterns = [
     path('GetStudentDetails1/', classroom.IndividualStudentForStudentLogin),
     path('getDetails/oneStudent/', classroom.OneStudent),
     path('getDetails/allStudents/', classroom.AllStudents1),
+    path('getDetails/onParticularDate/', classroom.getDailyAttendance),
     path('takeAttendance/tpost_form_upload/', classroom.TClassDetails),
+    path('GetStuOnDate/', classroom.DailyAttendance),
+    path('GetStudentDetails1_Date/', classroom.GetStudentDetailsOnDate),
+    path('GetDailyAttendance/', classroom.DailyAttendance),
     path('logout/',classroom.logout,name='logout'),
     path('collect_data/',classroom.collect_data),
 ]

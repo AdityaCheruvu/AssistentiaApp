@@ -5,6 +5,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, render_to_response
 from django.utils import timezone
 import datetime
+from django.contrib import messages
+
 from classroom.models import Subject
 from classroom.models import User
 from classroom.models import ClassToStudent_Mapping
@@ -25,6 +27,8 @@ from django.contrib import auth
 
 var1 = ''
 cid1=''
+sid_d=''
+date_d=''
 
 def Intital_page(request):
     return render(request, 'classroom/select.html')
@@ -112,6 +116,12 @@ class test_code:
         cid1=classID
         print(cid1)
 
+    def code3(self, studentId, Date):
+        global sid_d
+        global date_d
+        sid_d=studentId
+        date_d = Date
+
     '''def collect_data(request):
             if request.method=='POST':
                     data=request.POST.getlist('check_1')
@@ -156,30 +166,85 @@ def AllStudents(request):
             form = PostForm()
         else:
             form = PostForm(request.POST)
-
-            if form.is_valid():
-                classID = form.cleaned_data['classID']
-                py_obj=test_code()
-                py_obj.code2(classID)
+            classID = form['classID'].value()
+            py_obj=test_code()
+            py_obj.code2(classID)
         print(cid1)
         #users = ClassToStudent_Mapping.objects.filter(ClassId = cid1)
-        users = MarkAttendanceCode.getCumulativeAttendanceOfStudents(cid1);
+        try:
+            users = MarkAttendanceCode.getCumulativeAttendanceOfStudents(cid1)
+            try:
+                print(users[1])
+            except:
+                return render(request, 'classroom/None.html')
+        except IndexError:
+            return render(request, 'classroom/None.html')
         if(bool(users)):
             return render(request, 'classroom/AllStudentDetails.html', {'users': users}, {'classId' : cid1},)
         else:
             return render(request, 'classroom/None.html', {'users': users})
+
+def GetStudentDetailsOnDate(request):
+    if request.user.is_authenticated:
+        return render(request, 'classroom/GetStudentDetailsOnDate.html')
+    else:
+        return render(request, 'classroom/NotAuthenticated.html')
+
+
 
 def IndividualStudentForStudentLogin(request):
     if request.user.is_authenticated:
         if request.user.is_student:
             now = timezone.now()
             #users = User.objects.all()
-            users = MarkAttendanceCode.getCumulativeAttendanceOfAStudent(stuUsrname)
+            try:
+                users = MarkAttendanceCode.getCumulativeAttendanceOfAStudent(stuUsrname)
+            except IndexError:
+                return render(request, 'classroom/None.html')
             print(users)
             return render(request, 'classroom/IndividualStudentDetailsForStudentLogin.html', {'users': users})
         else:
             return render(request, 'classroom/NotAuthenticated.html')
 
+def getDailyAttendance(request):
+    if request.user.is_authenticated:
+        if request.user.is_teacher:
+            return render(request, 'classroom/dailyAttendance.html')
+        else:
+            return render(request, 'classroom/NotAuthenticated.html')
+
+def DailyAttendance(request):
+    now = timezone.now()
+    if request.method == 'GET':
+        form = PostForm()
+    else:
+        form = PostForm(request.POST)
+        if request.user.is_teacher:
+            if form.is_valid():
+                studentID = form.cleaned_data['classID']
+                print(studentID)
+                date1 = form.cleaned_data['Date']
+                py_obj=test_code()
+                py_obj.code3(studentID, date1)
+        else:
+            form = PostForm(request.POST)
+            studentID = request.user.username
+            print(studentID)
+            date1 = form['classID'].value()
+            print(date1)
+            py_obj=test_code()
+            py_obj.code3(studentID, date1)
+    #users = ClassToStudent_Mapping.objects.filter(ClassId = cid1)
+    try:
+        users = MarkAttendanceCode.getDailyAttendance(studentID, date1)
+    except IndexError:
+        return render(request, 'classroom/None.html')
+    if(bool(users)):
+        paramList=[studentID, date1]
+        print(paramList)
+        return render(request, 'classroom/IndividualStudentDetails.html', {'users': users})
+    else:
+        return render(request, 'classroom/None.html', {'users': users})
 
 def IndividualStudent(request):
         now = timezone.now()
@@ -187,12 +252,13 @@ def IndividualStudent(request):
             form = PostForm()
         else:
             form = PostForm(request.POST)
-
-            if form.is_valid():
-                studentID = form.cleaned_data['classID']
-                py_obj=test_code()
-                py_obj.code1(studentID)
-        users = MarkAttendanceCode.getCumulativeAttendanceOfAStudent(studentID)
+            studentID = form['classID'].value()
+            py_obj=test_code()
+            py_obj.code1(studentID)
+        try:
+            users = MarkAttendanceCode.getCumulativeAttendanceOfAStudent(studentID)
+        except IndexError:
+            return render(request, 'classroom/None.html')
         print(users);
         #users = User.objects.filter(username = sid1)
         if(bool(users)):

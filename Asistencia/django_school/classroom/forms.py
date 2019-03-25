@@ -35,3 +35,4 @@ class StudentSignUpForm(UserCreationForm):
 
 class PostForm(forms.Form):
     classID = forms.CharField(max_length=256)
+    Date = forms.CharField(max_length=256)

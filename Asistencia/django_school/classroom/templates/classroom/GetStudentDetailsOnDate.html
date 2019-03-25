@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<html>
+
+  <p>
+    </br>
+    <br>
+  </p>
+
+  <p>
+    <h2>Enter Date: </h2>
+  </p>
+
+  </br>
+
+  <body>
+
+    <form action='/GetDailyAttendance/'  method='POST'>{% csrf_token %}
+      <input id="One" type="date" name="classID" required>
+    </br>
+      <input type='submit' value='submit' onclick="window.location.href='/allStudents/'" />
+    </form>
+
+
+  </body>
+
+</html>
+{% endblock %}
