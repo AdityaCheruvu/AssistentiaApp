@@ -48,16 +48,11 @@
   <table width=100%>
     <tr>
       {% for user in users %}
-          <tr>
-            <td><h2>{{user.0}}</h2></td>
-            <td><h2>{{user.1}}</h2></td>
-            <td><h2>{{user.2}}</h2></td>
-            <td><h2>{{user.3}}</h2></td>
-            <td><h2>{{user.4}}</h2></td>
-            <td><h2>{{user.5}}</h2></td>
-            <td><h2>{{user.6}}</h2></td>
-            <td><h2>{{user.7}}</h2></td>
-          </tr>
+      <tr>
+        {% for i in user %}
+        <td><h2>{{i}}</h2></td>
+        {% endfor %}
+      </tr>
 
       {% endfor %}
     </h2>

@@ -43,22 +43,22 @@
   </br>
 
 
-
+<center>
   <p>
     </p>
       </br>
-        <table>
+        <table align="center">
             <tr>
                 {% for user in users %}
               <tr>
-                <td><h2>{{user.0}}</h2></td>
-                <td><h2>{{user.2}}</h2></td>
-                <td><h2>{{user.3}}</h2></td>
+                {% for i in user %}
+                <td><h2>{{i}}</h2></td>
+                {% endfor %}
               </tr>
       {% endfor %}
   </h2>
       </table>
-
+</center>
 </html>
 
 {% endblock %}
