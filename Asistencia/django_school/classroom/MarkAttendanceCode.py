@@ -286,7 +286,7 @@ def getCumulativeAttendanceOfStudent(roll, classId, cursor):
         except:
             attended=0
         data = (classId, i)
-        cursor.execute("select Total from classroom_dailyattendancetotal where ClassId=%s and SubId=%s", data)
+        cursor.execute("select Total from classroom_cumulativeattendancetotal where ClassId=%s and SubId=%s", data)
         try:
             totalClasses = cursor.fetchall()[0][0]
             totalClassesDone+=totalClasses
