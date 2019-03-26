@@ -305,7 +305,7 @@ def getHeader(classId, cursor):
         classSubIdToName[i[0]] = i[1]
 
     header = [classSubIdToName[i] for i in sorted(classSubIdToName.keys())]
-    return ["Roll Number"] + header + ["Total" + "Percentage"]
+    return ["Roll Number"] + header + ["Total", "Percentage"]
 
 def getCumulativeAttendanceOfAStudent(roll):
     #getClass Id
