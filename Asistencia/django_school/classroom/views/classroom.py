@@ -276,12 +276,11 @@ def Tpost_form_upload(request):
                 form = PostForm(request.POST)
                 usrname = request.user.username
 
-                if form.is_valid():
-                    classID = form.cleaned_data['classID']
-                    py_obj=test_code()
-                    data=py_obj.code(classID, usrname)
-                    print(data[0],data[1],data[2],data[3])
-                    MarkAttendanceCode.callAbsenteesListAloud(list(data[0]))
+                classID = form['classID'].value()
+                py_obj=test_code()
+                data=py_obj.code(classID, usrname)
+                print(data[0],data[1],data[2],data[3])
+                MarkAttendanceCode.callAbsenteesListAloud(list(data[0]))
             return render(request, 'classroom/absentees.html',{'data':list(data[0]),'data1':list(data[1]),'classId':data[2],'usrname':data[3]})
         else:
             return render(request, 'classroom/NotAuthenticated.html')

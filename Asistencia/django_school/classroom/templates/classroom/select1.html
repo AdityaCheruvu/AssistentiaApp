@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}
+Assistencia
+{% endblock %}
+{% block head %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/base.css'%}"
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+{% endblock %}
+{% block content %}
+
+<div>
+
+  <div id="Slection_page">
+    <h1 style="color:yellow;font-family:oblique;color:white;font-size:60px;margin-left:-5px;margin-top:-2px;width:10%;border-bottom:.5px solid ;padding:4px;backgroung-color:blue;">Assistencia</h1><br>
+    <button style="padding:20px;margin-left:-30px;border-radius:20%;font-family:oblique;font-size:20px;"id="button" onclick="window.location.href='{% url 'login' %}'"><i class="material-icons" style="font-size:40px;">&#xe853;</i>Student</button>
+    <button style="padding:20px;border-radius:20%;margin-left:175px;font-family:oblique;"id="button" onclick="window.location.href='{% url 'login' %}'"><i class="material-icons"style="font-size:40px;">&#xe853;</i>Professor</button>
+  </div>
+
+  <button style="padding:20px;border-radius:20%;margin-left:-2px;font-family:oblique;" font-size:20px id="button" onclick="window.location.href='{% url 'signup' %}'"><i class="material-icons"style="font-size:40px;">&#xe853;</i>SignUp</button>
+
+</div>
+
+{% endblock %}

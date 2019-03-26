@@ -8,18 +8,61 @@
 
   <head>
     <title>{% block title %}{% endblock %}</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
     <link rel="stylesheet" type="text/css" href=" {% static 'css/base.css'%}">
-    <link rel="stylesheet" type="text/css" href=" {% static 'css/home.css'%}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+
+<!-- Main css -->
+   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+   <link href="https://fonts.googleapis.com/css?family=Lora|Merriweather:300,400" rel="stylesheet">
+   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   </head>
 
   <body >
-    <div class="wrapper">
+   <div class="navbar navbar-default navbar-static-top" role="navigation">
         <div class="container">
+
+             <div class="navbar-header">
+                  <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                       <span class="icon icon-bar"></span>
+                       <span class="icon icon-bar"></span>
+                       <span class="icon icon-bar"></span>
+                  </button>
+                  <a href="{% url 'Intital_page' %}" class="navbar-brand">Assistencia</a>
+             </div>
+             <div class="collapse navbar-collapse">
+                  <ul class="nav navbar-nav navbar-right">
+                       <li class="active"><a href="{% url 'home' %}">Home</a></li>
+                       <li><a href="about.html">About</a></li>
+                       <li><a href="gallery.html">Contact</a></li>
+                       <li><a href="{% url 'logout' %}">Logout</a></li>
+                  </ul>
+       </div>
+
+     </div>
+   </div>
+    <div id="wrapper">
+        <div id="container">
           <h1>{% block head %}{% endblock %}</h1>
             {% block content %}{% endblock %}
         </div>
     </div>
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/particles.min.js' %}"></script>
+    <script src="{% static 'js/app.js'%}"></script>
+    <script src="{% static 'js/jquery.parallax.js' %}"></script>
+    <script src="{% static 'js/smoothscroll.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+
   </body>
 
 </html>

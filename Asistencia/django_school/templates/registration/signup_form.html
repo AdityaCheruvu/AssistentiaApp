@@ -9,10 +9,10 @@
 {% endblock %}
 {% block content %}
 
-  <div class="row">
+<!--  <div class="row">
 
-    <div class="col-md-8 col-sm-10 col-12">
-      <h2>Sign up as a {{ user_type }}</h2>
+    <div class="col-md-8 col-sm-10 col-12">-->
+      <h1>Sign up as a {{ user_type }}</h1>
       <form method="post" novalidate>
         {% csrf_token %}
         <input type="hidden" name="next" value="{{ next }}">
@@ -20,8 +20,8 @@
         </br>
         <button type="submit" class="btn btn-success">Sign up</button>
       </form>
-    </div>
-    
-  </div>
+  <!--  </div>
+
+  </div>-->
 
 {% endblock %}
