@@ -31,7 +31,7 @@ classDir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "classes/")
 pickleName = "training.pickle"
 
 #sqlPath
-sqlConn = sql.connect(user="root", database="asistencia", host="127.0.0.1", password="nani@712")
+sqlConn = sql.connect(user="root", database="asistencia", host="127.0.0.1", password="toor")
 """-----------------------------------------"""
 
 def cropFaceData(pictureDat, locationOfFace):
