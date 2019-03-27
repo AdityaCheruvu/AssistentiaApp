@@ -18,13 +18,15 @@ from classroom.models import DetailsForm
 from classroom.forms import PostForm
 from django.http import HttpResponseRedirect
 from classroom import MarkAttendanceCode
-
+import csv
 from classroom.forms import PostForm
 import subprocess
 from subprocess import call
 from django.contrib.auth.decorators import login_required
 from django.contrib import auth
-
+from django.conf import settings
+from django.http import HttpResponse,Http404
+import xlsxwriter
 var1 = ''
 cid1=''
 sid_d=''
@@ -46,6 +48,44 @@ def logout(request):
             some_var = request.POST.getlist('check_1')
             print(some_var)
             return render(request, 'classroom/absentees.html',{'data':ab})'''
+
+def get_condo_list(request):
+    return render(request,'classroom/Get_condo_list.html')
+
+#@permission_required('admin.can_add_log_entry')
+def download(request):
+    response=HttpResponse(content_type='text/csv')
+    response['Content-Disposition']='attachment;filename="attendence_list.xlsx"'
+    if request.method=='POST':
+        cid=request.POST.get('classID')
+        print(cid)
+        try:
+                    users = MarkAttendanceCode.getCumulativeAttendanceOfStudents(cid)
+                    print(users)
+                    if(len(users)==0):
+                                        return render(request, 'classroom/None.html')
+                    else:
+                        workbook = xlsxwriter.Workbook(response)
+                        worksheet = workbook.add_worksheet()
+                        cell_format = workbook.add_format()
+                        cell_format.set_font_color('red')
+                        row =0
+                        col=0
+                        count=0
+                        for user in users:
+                            for  data in  user:
+                                    if count==0:
+                                                worksheet.write(row, col,data,cell_format)
+                                                count +=1
+                                    worksheet.write(row, col,data)
+                                    col +=1
+                            row += 1
+                            col=0
+                        workbook.close()
+
+        except IndexError:
+                    return render(request, 'classroom/None.html')
+    return response
 
 def collect_data(request):
     if request.user.is_authenticated:
@@ -174,7 +214,7 @@ def AllStudents(request):
         try:
             users = MarkAttendanceCode.getCumulativeAttendanceOfStudents(cid1)
             try:
-                print(users[1])
+                print(users)
             except:
                 return render(request, 'classroom/None.html')
         except IndexError:

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block head %}
+Enter Class Id
+{% endblock %}
+{% block content %}
+<form action='/download/'  method='POST'>{% csrf_token %}
+  <input id="One" type="text" name="classID" required>
+  <input type='submit' value='submit'/>
+</form>
+{% endblock %}

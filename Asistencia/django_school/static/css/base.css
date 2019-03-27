@@ -91,7 +91,7 @@ background-size:100%;
   color:white;
   font-weight: 300;
   overflow:hidden;
-overflow-y:auto;
+overflow-y:hidden;
 
 }
 body ::-webkit-input-placeholder {
@@ -100,7 +100,7 @@ body ::-webkit-input-placeholder {
   color:blue;
   font-weight: 300;
   overflow:hidden;
-overflow-y:auto;
+overflow-y:hidden;
 
 }
 body :-moz-placeholder {
@@ -113,7 +113,7 @@ background-size:100%;
   font-weight: 300;
     vertical-align: middle;
     overflow:hidden;
-overflow-y:auto;
+overflow-y:hidden;
 
 
 }
@@ -127,7 +127,7 @@ vertical-align: middle;
   opacity: 1;
   font-weight: 300;
   overflow:hidden;
-overflow-y:auto;
+overflow-y:hidden;
 
 }
 body :-ms-input-placeholder {

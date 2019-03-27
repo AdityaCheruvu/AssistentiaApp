@@ -93,7 +93,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'asistencia',
         'USER': 'root',
-        'PASSWORD': 'toor',
+        'PASSWORD': 'nani@712',
         'HOST': '127.0.0.1',
         'PORT': '3306'
         }
@@ -148,6 +148,8 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
+
+MEDIA_ROOT='/home/nagababu/Download'
 
 
 # Third party apps configuration
