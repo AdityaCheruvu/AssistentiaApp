@@ -8,6 +8,9 @@
   table
   {
     width:100%;
+    align:center;
+    margin-left:-100px;
+    margin-top:-100px;
   }
   table, th, td
   {
@@ -16,7 +19,7 @@
   }
   th, td
   {
-    padding: 15px;
+    padding: 10px;
     text-align: left;
   }
   table#t01 tr:nth-child(even)
@@ -34,29 +37,29 @@
   }
 </style>
     <p>
-        </br>
-        </br>
+        <h3 style="color:green;margin-top:-50px;">Attendance Details are: </h3>
     </p>
-
-    <p>
-        <h1>Attendance Details are: </h1>
-    </p>
-
+    </br>
+    </br>
     </br>
     </br>
     <p>{{user.0.0}}</p>
-    <table width=100%>
+    <center>
+      <p>
+      </p>
+    <table align="center">
       <tr>
         {% for user in users %}
             <tr>
               {% for i in user %}
-              <td><h2>{{i}}</h2></td>
+                <td><p style="font-size:23px;">{{i}}</p></td>
               {% endfor %}
             </tr>
 
         {% endfor %}
       </h2>
     </table>
+    </center>
 
 </html>
 

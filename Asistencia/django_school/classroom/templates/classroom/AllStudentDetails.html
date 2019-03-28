@@ -8,7 +8,8 @@
     {
       width:0%;
       align:center;
-      margin-left:-250px
+      margin-left:-100px;
+      margin-top:-100px;
     }
     table, th, td
     {
@@ -17,7 +18,7 @@
     }
     th, td
     {
-      padding: 15px;
+      padding: 10px;
       text-align: left;
     }
     table#t01 tr:nth-child(even)
@@ -37,7 +38,7 @@
 
   <p>
     </br>
-    <h3 style="color:green;">Attendance Details of all students of class is: </h3>
+    <h3 style="color:green;margin-top:-100px;">Attendance Details of all students of class is: </h3>
     <br>
   </p>
 
@@ -54,11 +55,10 @@
                 {% for user in users %}
               <tr>
                 {% for i in user %}
-                <td><h2>{{i}}</h2></td>
+                <td><p style="font-size:23px;">{{i}}</p></td>
                 {% endfor %}
               </tr>
       {% endfor %}
-  </h2>
       </table>
 </center>
 </html>

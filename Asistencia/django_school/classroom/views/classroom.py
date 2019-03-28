@@ -68,6 +68,7 @@ def download(request):
                         workbook = xlsxwriter.Workbook(response)
                         worksheet = workbook.add_worksheet()
                         cell_format = workbook.add_format()
+                        cell_format.set_bold()
                         cell_format.set_font_color('red')
                         row =0
                         col=0
@@ -76,11 +77,13 @@ def download(request):
                             for  data in  user:
                                     if count==0:
                                                 worksheet.write(row, col,data,cell_format)
-                                                count +=1
                                     worksheet.write(row, col,data)
                                     col +=1
+                                    if count!=0 and int(user[-1]) < 75:
+                                            cc=0
                             row += 1
                             col=0
+                            count+=1
                         workbook.close()
 
         except IndexError:

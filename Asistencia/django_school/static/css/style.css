@@ -280,7 +280,8 @@ a:hover, a:active, a:focus {
 }
 
 .main-home {
-  background: url('./back1.jpg') no-repeat;
+	background: url('/static/img/back1.jpg') no-repeat;
+	background-attachment: fixed;
   height: 100vh;
 }
 
