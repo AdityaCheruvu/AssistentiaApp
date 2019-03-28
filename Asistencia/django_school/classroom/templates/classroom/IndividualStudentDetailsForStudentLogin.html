@@ -3,35 +3,37 @@
 {% block content %}
 <html>
 
-  <style>
-    table
-    {
-      width:100%;
-    }
-    table, th, td
-    {
-      border: 1px solid white;
-      border-collapse: collapse;
-    }
-    th, td
-    {
-      padding: 15px;
-      text-align: left;
-    }
-    table#t01 tr:nth-child(even)
-    {
-      background-color: #eee;
-    }
-    table#t01 tr:nth-child(odd)
-    {
-     background-color: #fff;
-    }
-    table#t01 th
-    {
-      background-color: black;
-      color: white;
-    }
-  </style>
+<style>
+  table
+  {
+    width:0%;
+    align:center;
+    margin-left:-250px
+  }
+  table, th, td
+  {
+    border: 1px solid white;
+    border-collapse: collapse;
+  }
+  th, td
+  {
+    padding: 15px;
+    text-align: left;
+  }
+  table#t01 tr:nth-child(even)
+  {
+    background-color: #eee;
+  }
+  table#t01 tr:nth-child(odd)
+  {
+   background-color: #fff;
+  }
+  table#t01 th
+  {
+    background-color: black;
+    color: white;
+  }
+</style>
 
   <p>
     </br>
@@ -45,7 +47,7 @@
   </br>
   </br>
 
-  <table width=100%>
+  <table width=50%>
     <tr>
       {% for user in users %}
       <tr>

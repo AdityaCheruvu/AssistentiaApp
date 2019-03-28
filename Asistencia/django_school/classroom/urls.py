@@ -20,5 +20,6 @@ urlpatterns = [
     path('logout/',classroom.logout,name='logout'),
     path('collect_data/',classroom.collect_data),
     path('download/',classroom.download,name='download'),
+    path('hod/AttendanceDetails/', classroom.Hod_Attendnace),
     path('get_condo_list/',classroom.get_condo_list,name='Condo_List')
 ]

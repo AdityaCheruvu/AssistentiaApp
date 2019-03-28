@@ -52,6 +52,12 @@ def logout(request):
 def get_condo_list(request):
     return render(request,'classroom/Get_condo_list.html')
 
+def Hod_Attendnace(request):
+    if request.user.is_authenticated:
+        return render(request, 'classroom/DownloadAttendanceDetails.html')
+    else:
+        return render(request, 'classroom/NotAuthenticated.html')
+
 #@permission_required('admin.can_add_log_entry')
 def download(request):
     response=HttpResponse(content_type='text/csv')
@@ -130,10 +136,14 @@ def home(request):
             global usrname
             usrname = request.user.username
             return render(request, 'classroom/teachers/LecturerLogin.html')
-        else:
+        elif request.user.is_student:
             global stuUsrname
             stuUsrname = request.user.username
             return render(request, 'classroom/students/StudentLogin.html')
+        else:
+            global hodUsrname
+            hodUsrname = request.user.username
+            return render(request, 'classroom/Hod/HodLogin.html')
     return render(request, 'registration/login.html')
 
 
