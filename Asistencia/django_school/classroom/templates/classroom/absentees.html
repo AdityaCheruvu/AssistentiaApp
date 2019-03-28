@@ -7,19 +7,20 @@ Absentees List
 {% block content %}
 <div style="margin-top:-110px;">
 <form method='POST' style="margin-top:40px;"align="centre" action='/collect_data/'>{% csrf_token %}
-<table style="margin-left:200px;" cellspacing="6">
-<tr style="color:red;font-size:30px;">
-<td style="display: inline-block;">Name</td>
 <input style="display:None;" type="checkbox" name="classid" value={{ classId }} checked>
 <input style="display:None;" type="checkbox" name="userid" value={{ usrname }} checked>
-{% for i in data1 %}
-<input style="display:None;" type="checkbox" name="present" value={{ i }} checked >
-{% endfor %}
-<td>Absent</td>
+  {% for i in data1 %}
+  <input style="display:None;" type="checkbox" name="present" value={{ i }} checked >
+  {% endfor %}
+<table style="margin-left:200px;" cellspacing="10">
+<tr style="color:red;font-size:30px;">
+<td style="display: inline-block;">Name</td>
+
+<td style="margin-left:20px;">Present</td>
 </tr>
 {% for i in data %}
 <tr>
-<td style="font-size:15px; text-align:centre;">{{ i }}</td>
+<td style="font-size:25px; text-align:centre;">{{ i }}</td>
 <td><input style="zoom:1.5;height:auto;width:auto;"type="checkbox" name="check_1" value={{ i }} ></td><br>
 <tr>
 {% endfor %}

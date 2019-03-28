@@ -6,7 +6,6 @@ from django.shortcuts import render, get_object_or_404, render_to_response
 from django.utils import timezone
 import datetime
 from django.contrib import messages
-
 from classroom.models import Subject
 from classroom.models import User
 from classroom.models import ClassToStudent_Mapping
@@ -96,6 +95,9 @@ def download(request):
                     return render(request, 'classroom/None.html')
     return response
 
+
+def contact(request):
+    return render(request,'classroom/contact.html')
 def collect_data(request):
     if request.user.is_authenticated:
         if request.user.is_teacher:
@@ -128,6 +130,7 @@ def collect_data(request):
 
 class SignUpView(TemplateView):
     template_name = 'registration/signup.html'
+
 
 @login_required
 def home(request):
