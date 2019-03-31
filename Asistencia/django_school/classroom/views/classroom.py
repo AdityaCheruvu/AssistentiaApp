@@ -240,15 +240,15 @@ def AllStudents(request):
         try:
             users = MarkAttendanceCode.getCumulativeAttendanceOfStudents(cid1)
             try:
-                print(users)
+                print(users[1])
             except:
-                return render(request, 'classroom/None.html')
+                return render(request, 'classroom/None_cid.html', {'message':'Enter Valid ClassId'})
         except IndexError:
-            return render(request, 'classroom/None.html')
+            return render(request, 'classroom/None_cid.html', {'message':'Enter Valid ClassId'})
         if(bool(users)):
             return render(request, 'classroom/AllStudentDetails.html', {'users': users, 'classId' : cid1})
         else:
-            return render(request, 'classroom/None.html', {'users': users})
+            return render(request, 'classroom/None_cid.html', {'users': users, 'message':'Enter Valid ClassId'})
 
 def GetStudentDetailsOnDate(request):
     if request.user.is_authenticated:
@@ -304,13 +304,13 @@ def DailyAttendance(request):
     try:
         users = MarkAttendanceCode.getDailyAttendance(studentID, date1)
     except IndexError:
-        return render(request, 'classroom/None.html')
+        return render(request, 'classroom/None_date.html', {'message':'Enter Valid Details'})
     if(bool(users)):
         paramList=[studentID+" on ", date1]
         print(paramList)
         return render(request, 'classroom/IndividualStudentDetails.html', {'users': users, 'param':paramList})
     else:
-        return render(request, 'classroom/None.html', {'users': users})
+        return render(request, 'classroom/None_date.html', {'users': users, 'message':'Enter Valid Details'})
 
 def IndividualStudent(request):
         now = timezone.now()
@@ -324,7 +324,7 @@ def IndividualStudent(request):
         try:
             users = MarkAttendanceCode.getCumulativeAttendanceOfAStudent(studentID)
         except IndexError:
-            return render(request, 'classroom/None.html')
+            return render(request, 'classroom/None.html', {'message':'Enter Valid StudentId'})
         print(users);
         #users = User.objects.filter(username = sid1)
         if(bool(users)):
