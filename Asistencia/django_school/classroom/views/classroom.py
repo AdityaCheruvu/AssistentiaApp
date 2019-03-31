@@ -297,9 +297,9 @@ def DailyAttendance(request):
     except IndexError:
         return render(request, 'classroom/None.html')
     if(bool(users)):
-        paramList=[studentID, date1]
+        paramList=[studentID+" on ", date1]
         print(paramList)
-        return render(request, 'classroom/IndividualStudentDetails.html', {'users': users})
+        return render(request, 'classroom/IndividualStudentDetails.html', {'users': users, 'param':paramList})
     else:
         return render(request, 'classroom/None.html', {'users': users})
 
@@ -319,7 +319,7 @@ def IndividualStudent(request):
         print(users);
         #users = User.objects.filter(username = sid1)
         if(bool(users)):
-            return render(request, 'classroom/IndividualStudentDetails.html', {'users': users})
+            return render(request, 'classroom/IndividualStudentDetails.html', {'users': users, 'sid':studentID})
         else:
             return render(request, 'classroom/None.html', {'users': users})
 
