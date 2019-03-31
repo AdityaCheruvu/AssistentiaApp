@@ -64,37 +64,46 @@ def download(request):
     response['Content-Disposition']='attachment;filename="attendence_list.xlsx"'
     if request.method=='POST':
         cid=request.POST.get('classID')
-        print(cid)
-        try:
-                    users = MarkAttendanceCode.getCumulativeAttendanceOfStudents(cid)
-                    print(users)
-                    if(len(users)==0):
-                                        return render(request, 'classroom/None.html')
-                    else:
-                        workbook = xlsxwriter.Workbook(response)
-                        worksheet = workbook.add_worksheet()
-                        cell_format = workbook.add_format()
-                        cell_format.set_bold()
-                        cell_format.set_font_color('red')
-                        row =0
-                        col=0
-                        count=0
-                        for user in users:
-                            for  data in  user:
-                                    if count==0:
-                                                worksheet.write(row, col,data,cell_format)
-                                    worksheet.write(row, col,data)
-                                    col +=1
-                                    if count!=0 and int(user[-1]) < 75:
-                                            cc=0
-                            row += 1
+        cid1 = cid.lower();
+        print(cid1)
+        usrname = request.user.username
+        usrname1 = usrname.lower();
+        x = usrname1.split('_')
+        cid2 = cid1[1:len(cid1)-1]
+        if(cid2 == x[1]):
+            try:
+                        users = MarkAttendanceCode.getCumulativeAttendanceOfStudents(cid)
+                        print(users)
+                        if(len(users)==0):
+                                            return render(request, 'classroom/None.html')
+                        else:
+                            workbook = xlsxwriter.Workbook(response)
+                            worksheet = workbook.add_worksheet()
+                            cell_format = workbook.add_format()
+                            cell_format.set_bold()
+                            cell_format.set_font_color('red')
+                            row =0
                             col=0
-                            count+=1
-                        workbook.close()
+                            count=0
+                            for user in users:
+                                for  data in  user:
+                                        if count==0:
+                                                    worksheet.write(row, col,data,cell_format)
+                                        worksheet.write(row, col,data)
+                                        col +=1
+                                        if count!=0 and int(user[-1]) < 75:
+                                                cc=0
+                                row += 1
+                                col=0
+                                count+=1
+                            workbook.close()
 
-        except IndexError:
-                    return render(request, 'classroom/None.html')
-    return response
+            except IndexError:
+                        return render(request, 'classroom/None.html')
+            return response
+        else:
+            return render(request, 'classroom/NotAuthenticated.html')
+            return response
 
 
 def contact(request):
