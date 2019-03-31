@@ -138,7 +138,9 @@ LOGIN_REDIRECT_URL = 'home'
 
 LOGOUT_REDIRECT_URL = 'Intital_page'
 
-
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.request',
+)
 # Messages built-in framework
 
 MESSAGE_TAGS = {

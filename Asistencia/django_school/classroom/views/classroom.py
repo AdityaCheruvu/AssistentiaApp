@@ -6,6 +6,7 @@ from django.shortcuts import render, get_object_or_404, render_to_response
 from django.utils import timezone
 import datetime
 from django.contrib import messages
+
 from classroom.models import Subject
 from classroom.models import User
 from classroom.models import ClassToStudent_Mapping
@@ -225,7 +226,7 @@ def AllStudents(request):
             classID = form['classID'].value()
             py_obj=test_code()
             py_obj.code2(classID)
-        print(cid1)
+        print("Cid is " + cid1)
         #users = ClassToStudent_Mapping.objects.filter(ClassId = cid1)
         try:
             users = MarkAttendanceCode.getCumulativeAttendanceOfStudents(cid1)
@@ -236,7 +237,7 @@ def AllStudents(request):
         except IndexError:
             return render(request, 'classroom/None.html')
         if(bool(users)):
-            return render(request, 'classroom/AllStudentDetails.html', {'users': users}, {'classId' : cid1},)
+            return render(request, 'classroom/AllStudentDetails.html', {'users': users, 'classId' : cid1})
         else:
             return render(request, 'classroom/None.html', {'users': users})
 
