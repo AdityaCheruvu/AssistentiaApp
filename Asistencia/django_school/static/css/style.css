@@ -286,7 +286,7 @@ a:hover, a:active, a:focus {
 }
 
 .main-about {
-  background: url('../images/about-image.jpg') no-repeat;
+  background: url('/static/img/back1.jpg') no-repeat;
 }
 
 .main-single-post {

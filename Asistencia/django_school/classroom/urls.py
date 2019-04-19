@@ -23,4 +23,5 @@ urlpatterns = [
     path('hod/AttendanceDetails/', classroom.Hod_Attendnace),
     path('get_condo_list/',classroom.get_condo_list,name='Condo_List'),
     path('contact/',classroom.contact,name='contact'),
+    path('about/',classroom.about,name='about'),
 ]

@@ -108,6 +108,8 @@ def download(request):
 
 def contact(request):
     return render(request,'classroom/contact.html')
+def about(request):
+    return render(request,'classroom/about.html')
 def collect_data(request):
     if request.user.is_authenticated:
         if request.user.is_teacher:
